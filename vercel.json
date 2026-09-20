@@ -2,9 +2,22 @@
   "functions": {
     "api/*.php": {
       "runtime": "vercel-php@0.6.0"
+    },
+    "*.php": {
+      "runtime": "vercel-php@0.6.0"
     }
   },
   "routes": [
+    {
+      "src": "/(config\\.php|db\\.php|mpesa\\.php|callback\\.log)",
+      "status": 403,
+      "response": {
+        "headers": {
+          "Content-Type": "text/plain"
+        },
+        "body": "Access Denied"
+      }
+    },
     {
       "src": "/(.*)",
       "dest": "/index.php"
