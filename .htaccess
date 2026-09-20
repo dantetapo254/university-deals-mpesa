@@ -1,0 +1,4 @@
+# Protect configuration and logs from direct browser access.
+<FilesMatch "^(config\.php|db\.php|mpesa\.php|callback\.log)$">
+    Require all denied
+</FilesMatch>
