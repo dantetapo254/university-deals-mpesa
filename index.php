@@ -1,4 +1,24 @@
-<?php  ini_set('display_errors', 1);
+<?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+session_start();
+
+// Protect the page: redirect to login if session is not active
+if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
+    header("Location: login.php");
+    exit();
+}
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+</head>
+<body>
+    <?php  ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
@@ -282,5 +302,8 @@ function pollStatus(orderId) {
     }, 5000);
 }
 </script>
+</body>
+</html>
+    <a href="logout.php">Logout</a>
 </body>
 </html>

@@ -7,8 +7,8 @@ return [
         // Use 'sandbox' while testing, then change to 'production'.
         'environment' => 'sandbox',
 
-        'consumer_key' => 'xpEA6biO5A3x8dier4qUDn1LXQOgTiz4rDUN9dMZ7PFVLSll',
-        'consumer_secret' => 'DuZrbyTKgb273YzSDBBggINjbNixg5jna0mmVMSkeqBEqx7QmlJtU3qXDdVCzMmF',
+        'consumer_key' => '3RxJjJ4lNNjcxnya1o0d56RIIf9cH48znxU9l4OGDS9KQBwg',
+        'consumer_secret' => 'IAeTl2fQgV4T14FAXebrNb6RzZ2ihTeI8E94azcAuuUVVgSkzeS1pgr8ePAmKLSh',
 
         // Your M-PESA PayBill/Till shortcode supplied by Safaricom.
         'shortcode' => '174379',
@@ -18,15 +18,19 @@ return [
         // Example: https://yourdomain.com/mpesa/callback.php
         'callback_url' => 'https://university-deals-mpesa.vercel.app/mpesa/callback.php',
 
-        // Name shown in the checkout description.
+      
         'transaction_desc' => 'Dante Project Payment',
     ],
 
-    'database' => [
-        'host' => 'localhost',
-        'name' => 'university_deals',
-        'user' => 'root',
-        'password' => '',
+  'database' => [
+        // Environment variables take priority when configured by the host.
+        'host' => getenv('DB_HOST') ?: 'sql301.infinityfree.com',
+        'name' => getenv('DB_NAME') ?: 'if0_42965045_university_deals',
+        'user' => getenv('DB_USER') ?: 'if0_42965045',
+        'password' => getenv('DB_PASSWORD') ?: 'XWw9x4nwxOl',
         'charset' => 'utf8mb4',
     ],
 ];
+php?>
+ 
+
