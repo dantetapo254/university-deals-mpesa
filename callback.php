@@ -3,7 +3,29 @@ require __DIR__ . '/db.php';
 
 $raw = file_get_contents('php://input');
 $data = json_decode($raw, true);
+// Inside callback.php after decoding JSON payload
+if ($resultCode == 0) {
+    // 1. Fetch pending transaction using CheckoutRequestID
+    $stmt = $pdo->prepare("SELECT user_id, amount FROM transactions WHERE checkout_request_id = :checkout_id AND status = 'PENDING'");
+    $stmt->execute([':checkout_id' => $checkoutRequestID]);
+    $tx = $stmt->fetch();
 
+    if ($tx) {
+        // 2. Update wallet balance
+        $updateWallet = $pdo->prepare("UPDATE users SET balance = balance + :amount WHERE id = :user_id");
+        $updateWallet->execute([
+            ':amount' => $tx['amount'],
+            ':user_id' => $tx['user_id']
+        ]);
+
+        // 3. Mark transaction as SUCCESS
+        $updateTx = $pdo->prepare("UPDATE transactions SET status = 'SUCCESS', mpesa_receipt = :receipt WHERE checkout_request_id = :checkout_id");
+        $updateTx->execute([
+            ':receipt' => $mpesaReceiptNumber,
+            ':checkout_id' => $checkoutRequestID
+        ]);
+    }
+}
 file_put_contents(__DIR__ . '/callback.log', date('c') . ' ' . $raw . PHP_EOL, FILE_APPEND);
 
 try {

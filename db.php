@@ -1,25 +1,19 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
 $config = require __DIR__ . '/config.php';
-
-// If config.php returns the array directly, use $config. 
-// If it wraps it under 'database', check for both automatically:
-$db = isset($config['database']) ? $config['database'] : $config;
+$db = $config['database'];
 
 try {
-    // Determine database name safely from config or fallback
-    $dbname = $db['dbname'] ?? $db['name'] ?? 'university_deals';
-    $host   = $db['host']   ?? 'localhost';
-    $user   = $db['user']   ?? $db['username'] ?? 'root';
-    $pass   = $db['password'] ?? '';
+    // Notice port=20873 included in the DSN
+    $dsn = "mysql:host={$db['host']};port={$db['port']};dbname={$db['name']};charset={$db['charset']}";
+    
+    $pdo = new PDO($dsn, $db['user'], $db['password'], [
+        PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        PDO::ATTR_EMULATE_PREPARES   => false,
+    ]);
 
-    $dsn = "mysql:host={$host};dbname={$dbname};charset=utf8mb4";
-
-    $pdo = new PDO($dsn, $user, $pass);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
+    // Uncomment the line below to test connection success
+    // echo "Successfully connected to Clever Cloud MySQL!";
 } catch (PDOException $e) {
-    die("Database connection failed: " . $e->getMessage());
+    die("Database Connection Failed: " . $e->getMessage());
 }
